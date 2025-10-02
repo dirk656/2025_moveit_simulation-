@@ -7,7 +7,7 @@ endif()
 
 # 添加可执行文件
 add_executable(moveit_test src/test.cpp)
-add_executable(simple_moveit_test src/simple_test.cpp)
+
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -26,18 +26,11 @@ ament_target_dependencies(moveit_test
   "moveit_ros_planning_interface"
 )
 
-ament_target_dependencies(simple_moveit_test
-  "rclcpp"
-  "moveit_core"
-  "trajectory_msgs"
-  "sensor_msgs"
-  "moveit_ros_planning_interface"
-)
 
 # 安装目标
 install(TARGETS
   moveit_test
-  simple_moveit_test
+  
   DESTINATION lib/${PROJECT_NAME}
 )
 
