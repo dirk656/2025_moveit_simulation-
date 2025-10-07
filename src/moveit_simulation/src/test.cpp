@@ -9,8 +9,9 @@ int main(int argc ,char**argv)
     rclcpp::init(argc,argv);
     auto node = std::make_shared<rclcpp::Node>("moveit_test_node");
     auto logger = rclcpp::get_logger("moveit_test");
+    
 
-    // 使用已经运行的MoveIt系统
+    
     auto move_group_interface = moveit::planning_interface::MoveGroupInterface(node, "panda_arm");
 
 auto const target_pose = []{
