@@ -19,6 +19,10 @@ add_executable(rh_moveit_integration src/rh_moveit_integration.cpp
 src/rh_planner.cpp
 )
 
+add_executable(comparison_node src/comparison_node.cpp
+src/rh_planner.cpp
+)
+
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -58,12 +62,33 @@ ament_target_dependencies(rh_moveit_integration
   "std_srvs"
 )
 
+ament_target_dependencies(comparison_node
+  "rclcpp"
+  "moveit_core"
+  "trajectory_msgs"
+  "sensor_msgs"
+  "moveit_ros_planning_interface"
+  "geometry_msgs"
+  "std_srvs"
+  "std_msgs"
+  "visualization_msgs"
+)
+
 
 # 安装目标
 install(TARGETS
   moveit_test
   planner_node
   rh_moveit_integration
+  comparison_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# 安装Python脚本
+install(PROGRAMS
+  scripts/velocity_plotter.py
+  scripts/trigger_comparison.py
+  scripts/test_comparison_system.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
