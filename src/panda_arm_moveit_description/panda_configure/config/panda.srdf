@@ -36,7 +36,7 @@
         <joint name="panda_hand_joint"/>
         <joint name="panda_finger_joint1"/>
         <joint name="panda_finger_joint2"/>
-        <chain base_link="panda_hand" tip_link="panda_rightfinger"/>
+        <!-- 移除chain定义，因为它不是有效的运动学链 -->
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
     <group_state name="home" group="panda_arm">

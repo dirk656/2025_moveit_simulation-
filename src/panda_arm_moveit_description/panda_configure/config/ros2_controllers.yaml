@@ -29,6 +29,26 @@ panda_arm_controller:
     state_interfaces:
       - position
       - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+    open_loop_control: false
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
+    gains:
+      panda_joint1: {p: 100.0, i: 0.01, d: 1.0}
+      panda_joint2: {p: 100.0, i: 0.01, d: 1.0}
+      panda_joint3: {p: 100.0, i: 0.01, d: 1.0}
+      panda_joint4: {p: 100.0, i: 0.01, d: 1.0}
+      panda_joint5: {p: 100.0, i: 0.01, d: 1.0}
+      panda_joint6: {p: 100.0, i: 0.01, d: 1.0}
+      panda_joint7: {p: 100.0, i: 0.01, d: 1.0}
+    interpolation_method: splines
+    constraints:
+      goal_time: 60.0
+      stopped_velocity_tolerance: 2.0
+      trajectory:
+        path_tolerance: 5.0
+        goal_tolerance: 1.0
+        min_goal_time: 1.0
 panda_hand_controller:
   ros__parameters:
     joint: panda_finger_joint1
