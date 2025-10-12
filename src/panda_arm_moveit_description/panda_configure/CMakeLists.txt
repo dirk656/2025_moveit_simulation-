@@ -12,5 +12,18 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/launch")
     PATTERN "setup_assistant.launch" EXCLUDE)
 endif()
 
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/scripts")
+  install(
+    DIRECTORY scripts
+    DESTINATION share/${PROJECT_NAME}
+    PATTERN "*.py" PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/worlds")
+  install(
+    DIRECTORY worlds
+    DESTINATION share/${PROJECT_NAME})
+endif()
+
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 install(FILES .setup_assistant DESTINATION share/${PROJECT_NAME})

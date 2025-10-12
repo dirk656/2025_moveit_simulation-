@@ -1,9 +1,0 @@
-<library path="moveit_rh_planner">
-  <class name="rh_planner_interface/RHPlannerManager" 
-         type="moveit_rh_planner::RHPlannerManager" 
-         base_class_type="planning_interface::PlannerManager">
-    <description>
-      Receding Horizon Planner: A fast trajectory planning method
-    </description>
-  </class>
-</library>

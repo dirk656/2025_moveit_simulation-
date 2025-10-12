@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+
+    <!-- Import local panda urdf file -->
+    <xacro:include filename="$(find panda_configure)/config/panda.urdf.xacro" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="panda.ros2_control.xacro" />
+
+    <!-- Gazebo specific configurations -->
+    <gazebo>
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+            <parameters>$(find panda_configure)/config/ros2_controllers.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    <!-- Add transmission elements for gazebo -->
+    <xacro:macro name="panda_transmission" params="joint_name">
+        <transmission name="${joint_name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${joint_name}">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${joint_name}_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <!-- Add transmissions for all joints -->
+    <xacro:panda_transmission joint_name="panda_joint1"/>
+    <xacro:panda_transmission joint_name="panda_joint2"/>
+    <xacro:panda_transmission joint_name="panda_joint3"/>
+    <xacro:panda_transmission joint_name="panda_joint4"/>
+    <xacro:panda_transmission joint_name="panda_joint5"/>
+    <xacro:panda_transmission joint_name="panda_joint6"/>
+    <xacro:panda_transmission joint_name="panda_joint7"/>
+    <xacro:panda_transmission joint_name="panda_finger_joint1"/>
+
+    <!-- Fixed joint to connect base to world for Gazebo simulation -->
+    <link name="world"/>
+    <joint name="world_joint" type="fixed">
+        <parent link="world"/>
+        <child link="panda_link0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Gazebo material properties -->
+    <gazebo reference="panda_link0">
+        <material>Gazebo/Grey</material>
+        <!-- Fix the base to the ground for Gazebo simulation -->
+        <static>true</static>
+        <gravity>false</gravity>
+        <self_collide>false</self_collide>
+    </gazebo>
+    <gazebo reference="panda_link1">
+        <material>Gazebo/Blue</material>
+    </gazebo>
+    <gazebo reference="panda_link2">
+        <material>Gazebo/Green</material>
+    </gazebo>
+    <gazebo reference="panda_link3">
+        <material>Gazebo/Red</material>
+    </gazebo>
+    <gazebo reference="panda_link4">
+        <material>Gazebo/Yellow</material>
+    </gazebo>
+    <gazebo reference="panda_link5">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+    <gazebo reference="panda_link6">
+        <material>Gazebo/Purple</material>
+    </gazebo>
+    <gazebo reference="panda_link7">
+        <material>Gazebo/White</material>
+    </gazebo>
+    <gazebo reference="panda_hand">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <xacro:panda_ros2_control name="GazeboSystem" initial_positions_file="$(arg initial_positions_file)"/>
+
+</robot>

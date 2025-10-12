@@ -18,7 +18,6 @@
         <link name="panda_link5"/>
         <link name="panda_link6"/>
         <link name="panda_link7"/>
-        <joint name="world"/>
         <joint name="panda_joint1"/>
         <joint name="panda_joint2"/>
         <joint name="panda_joint3"/>
@@ -26,8 +25,7 @@
         <joint name="panda_joint5"/>
         <joint name="panda_joint6"/>
         <joint name="panda_joint7"/>
-        <joint name="panda_joint8"/>
-        <chain base_link="panda_link0" tip_link="panda_link8"/>
+        <chain base_link="panda_link0" tip_link="panda_link7"/>
     </group>
     <group name="panda_hand">
         <link name="panda_hand"/>
