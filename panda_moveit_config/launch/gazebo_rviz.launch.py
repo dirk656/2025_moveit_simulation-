@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, RegisterEventHandler
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler, ExecuteProcess
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
@@ -10,19 +10,23 @@ import os
 def generate_launch_description():
     pkg_panda = get_package_share_directory('panda_moveit_config')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
-
-    # 路径
-    xacro_file = os.path.join(pkg_panda, 'config', 'panda.urdf.xacro')
-    controllers_yaml = os.path.join(pkg_panda, 'config', 'ros2_controllers.yaml')
+    
+    # 世界文件路径
     world_file = os.path.join(pkg_panda, 'worlds', 'empty.world')
 
-    # 生成机器人描述
+    # URDF 路径
+    xacro_file = os.path.join(pkg_panda, 'config', 'panda.urdf.xacro')
+
+    # 生成 robot_description 参数
     robot_description = Command([
         PathJoinSubstitution([FindExecutable(name='xacro')]),
         ' ', xacro_file
     ])
 
-    #启动 Gazebo Harmonic
+    # ros2_control 参数
+    controller_yaml = os.path.join(pkg_panda, 'config', 'ros2_controllers.yaml')
+
+    # 1️⃣ 启动 Gazebo Harmonic
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
@@ -30,7 +34,55 @@ def generate_launch_description():
         launch_arguments={'gz_args': f'-r {world_file}'}.items(),
     )
 
-    # ROS2-Gazebo 桥接
+    # 2️⃣ 发布机器人状态
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': robot_description}]
+    )
+
+    # 3️⃣ 在 Gazebo 中生成 Panda 模型
+    spawn_entity = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=['-topic', 'robot_description', '-name', 'panda'],
+        output='screen'
+    )
+
+    # 4️⃣ ros2_control 控制器节点
+    ros2_control_node = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        parameters=[{'robot_description': robot_description},
+                    controller_yaml],
+        output='screen'
+    )
+
+    # 5️⃣ 控制器加载顺序
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        output='screen'
+    )
+
+    panda_arm_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['panda_arm_controller', '--controller-manager', '/controller_manager'],
+        output='screen'
+    )
+
+    panda_hand_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['panda_hand_controller', '--controller-manager', '/controller_manager'],
+        output='screen'
+    )
+
+    # 6️⃣ ROS2-Gazebo 桥接
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -45,55 +97,21 @@ def generate_launch_description():
         output='screen'
     )
 
-    #发布 robot_state
-    robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        output='screen',
-        parameters=[{'robot_description': robot_description}],
+    # 7️⃣ 启动 MoveIt2 RViz
+    moveit_rviz = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_panda, 'launch', 'moveit_rviz.launch.py')
+        )
     )
 
-    #生成模型到仿真
-    spawn_entity = Node(
-        package='ros_gz_sim',
-        executable='create',
-        arguments=['-name', 'panda',
-                   '-topic', 'robot_description'],
-        output='screen',
+    # 8️⃣ 启动 MoveGroup
+    move_group = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_panda, 'launch', 'move_group.launch.py')
+        )
     )
 
-    #ros2_control 控制器节点
-    controller_manager = Node(
-        package='controller_manager',
-        executable='ros2_control_node',
-        parameters=[{'robot_description': robot_description},
-                    controllers_yaml],
-        output='screen'
-    )
-
-    #加载控制器
-    joint_state_broadcaster_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
-        output='screen',
-    )
-
-    panda_arm_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['panda_arm_controller', '--controller-manager', '/controller_manager'],
-        output='screen',
-    )
-
-    panda_hand_spawner = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['panda_hand_controller', '--controller-manager', '/controller_manager'],
-        output='screen',
-    )
-
-    #延迟加载顺序
+    # 当 joint_state_broadcaster 结束加载后再加载 panda_arm_controller
     delayed_arm_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
@@ -108,13 +126,16 @@ def generate_launch_description():
         )
     )
 
+    # 构建 LaunchDescription
     return LaunchDescription([
         gz_sim,
         robot_state_publisher,
-        controller_manager,
+        ros2_control_node,
         spawn_entity,
         bridge,
         joint_state_broadcaster_spawner,
         delayed_arm_spawner,
         delayed_hand_spawner,
+        move_group,
+        moveit_rviz
     ])

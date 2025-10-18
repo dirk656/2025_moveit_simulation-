@@ -14,6 +14,7 @@
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/cmake/panda_moveit_configConfig-version.cmake
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/package.xml
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/setup_assistant.launch.py
+/home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/gazebo_rviz.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/moveit_rviz.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/warehouse_db.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/move_group.launch.py
@@ -22,6 +23,7 @@
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/spawn_controllers.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/rsp.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/gazebo.launch.py
+/home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/worlds/empty.world
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/config/initial_positions.yaml
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/config/joint_limits.yaml
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/config/moveit_controllers.yaml
