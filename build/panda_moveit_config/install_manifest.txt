@@ -21,6 +21,7 @@
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/demo.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/spawn_controllers.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/rsp.launch.py
+/home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/launch/gazebo.launch.py
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/config/initial_positions.yaml
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/config/joint_limits.yaml
 /home/feng/2025_moveit_simulation-/install/panda_moveit_config/share/panda_moveit_config/config/moveit_controllers.yaml
