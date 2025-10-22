@@ -23,6 +23,14 @@ panda_arm_controller:
     state_interfaces:
       - position
       - velocity
+    gains:
+        panda_joint1: {p: 3000.0, i: 0.0, d: 100.0} 
+        panda_joint2: {p: 3000.0, i: 0.0, d: 100.0}
+        panda_joint3: {p: 3000.0, i: 0.0, d: 100.0}
+        panda_joint4: {p: 2000.0, i: 0.0, d: 50.0}
+        panda_joint5: {p: 2000.0, i: 0.0, d: 50.0}
+        panda_joint6: {p: 2000.0, i: 0.0, d: 50.0}
+        panda_joint7: {p: 1000.0, i: 0.0, d: 20.0}
 
 panda_hand_controller:
   ros__parameters:

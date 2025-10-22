@@ -57,8 +57,14 @@ def generate_launch_description():
     spawn_entity = Node(
         package='ros_gz_sim',
         executable='create',
-        arguments=['-name', 'panda',
-                   '-topic', 'robot_description'],
+        arguments=[
+            '-string', Command(['xacro ', xacro_file]),
+            '-name', 'panda',
+            '-allow_renaming', 'true',
+            '-x', '0.0',
+            '-y', '0.0',
+            '-z', '0.0',
+        ],
         output='screen',
     )
 
